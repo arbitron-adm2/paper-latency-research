@@ -1,0 +1,5 @@
+# Market capture / research
+websockets>=12,<16
+requests>=2.31,<3
+numpy>=1.26
+# Optional protocol clients: see clients/* dependency manifests.

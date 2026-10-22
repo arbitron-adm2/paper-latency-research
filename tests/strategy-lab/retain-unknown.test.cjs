@@ -1,0 +1,6 @@
+'use strict';
+const test=require('node:test'),assert=require('node:assert/strict'),{retainUnknown}=require('../../apps/strategy-lab/retain-unknown.cjs');
+function engine(kind='entry'){const margin=100n*10n**18n;return{intents:new Map([['x',{id:'x',kind,state:kind==='entry'?'expired':'queued',margin}]]),positions:kind==='entry'?new Map():new Map([['p',{margin}]]),reserved:0n,locked:kind==='entry'?0n:margin,realised:-5n,balance:2300n,timers:[{id:'x'}],note:()=>{}};}
+test('nonstop release after UNKNOWN is overruled without creating profit or freeing the slot',()=>{const e=engine();retainUnknown(e,{intentId:'x',executionAtMs:1000});assert.equal(e.reserved,100n*10n**18n);assert.equal(e.realised,-5n);assert.equal(e.intents.get('x').state,'outcome_unknown');assert.equal(e.timers.length,0);assert.equal(e.accountingQuarantined,true);});
+test('unknown close keeps physical margin locked and suspends future timers',()=>{const e=engine('exit');retainUnknown(e,{intentId:'x',executionAtMs:1000});assert.equal(e.locked,100n*10n**18n);assert.equal(e.positions.get('p').censored,true);assert.equal(e.realised,-5n);});
+test('unknown without a durable submission cannot be reconciled by assumption',()=>{assert.throws(()=>retainUnknown(engine(),{intentId:'missing'}),/WRITE_AHEAD/);});

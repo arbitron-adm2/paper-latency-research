@@ -1,0 +1,22 @@
+{
+  "name": "lead_lag_research_v1",
+  "symbols": ["BTC", "ETH"],
+  "threshold_bps": 0.5,
+  "baseline_tau_ms": 30000,
+  "warmup_ms": 60000,
+  "max_quote_age_ms": 1500,
+  "max_source_age_ms": 2000,
+  "max_source_future_ms": 1000,
+  "cooldown_ms": 5000,
+  "require_spot_confirmation": true,
+  "horizons_ms": [1000, 3000, 5000, 10000, 20000],
+  "entry_delay_ms": 3000,
+  "exit_delay_ms": 10000,
+  "hedge_delay_ms": 100,
+  "hedge_ratio": 1.0,
+  "notional_usd": 10000,
+  "paper_fee_bps_per_side": null,
+  "hedge_fee_bps_per_side": null,
+  "usdt_per_usdc": 1.0,
+  "notes": "Research parameters frozen before validation, no optimization on test data. Paper fills use HL BBO as an explicit proxy. Unknown fees leave net PnL NULL. Funding/liquidation and full-depth execution are not modelled."
+}

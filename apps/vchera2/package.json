@@ -1,0 +1,17 @@
+{
+  "name": "vchera2-isolated-runner",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Isolated Vlad Vchera2 readiness runner; exchange mutations are hard-disabled pending exact patch/specification",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "start": "node runner.cjs",
+    "status": "node cli.cjs status",
+    "test": "node --test ../../tests/vchera2/*.test.cjs"
+  },
+  "dependencies": {
+    "ethers": "6.17.0"
+  }
+}

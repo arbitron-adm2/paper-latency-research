@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "status": "SYNTHETIC_EXAMPLE_NOT_CALIBRATED",
+  "source": "Generated timing assumptions; no observed market/account data",
+  "entryTtlMs": 3600000,
+  "cancelMinLeadMs": 1500,
+  "fillFallbackMaxAgeMs": 0,
+  "exitPriceRetryMs": 0,
+  "entryMs": [
+    3000,
+    3500,
+    4000,
+    4500,
+    5000,
+    5500,
+    6000,
+    6500
+  ],
+  "exitBuckets": [
+    {
+      "maxHoldMs": 10000,
+      "medianMs": 10000
+    },
+    {
+      "maxHoldMs": 30000,
+      "medianMs": 7000
+    },
+    {
+      "maxHoldMs": null,
+      "medianMs": 4000
+    }
+  ]
+}

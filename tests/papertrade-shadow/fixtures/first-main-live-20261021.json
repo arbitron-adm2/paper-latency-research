@@ -1,0 +1,51 @@
+{
+  "description": "Generated synthetic execution-price regression; no live account or market recording",
+  "live": {
+    "decisionMs": 1577836800000,
+    "entryMs": 1577836804156,
+    "exitMs": 1577836819000,
+    "realPnl": -5.410637312957274
+  },
+  "oldShadow": {
+    "entryMs": 1577836805000,
+    "exitMs": 1577836820000
+  },
+  "quotes": [
+    {
+      "kind": "market",
+      "symbol": "BTC",
+      "venue": "hl",
+      "recv_ms": 1577836800000,
+      "source_ms": 1577836800000,
+      "payload": {
+        "frameKind": "quote",
+        "bid": "83114",
+        "ask": "83115"
+      }
+    },
+    {
+      "kind": "market",
+      "symbol": "BTC",
+      "venue": "hl",
+      "recv_ms": 1577836804000,
+      "source_ms": 1577836804000,
+      "payload": {
+        "frameKind": "quote",
+        "bid": "83169",
+        "ask": "83170"
+      }
+    },
+    {
+      "kind": "market",
+      "symbol": "BTC",
+      "venue": "hl",
+      "recv_ms": 1577836818900,
+      "source_ms": 1577836818900,
+      "payload": {
+        "frameKind": "quote",
+        "bid": "83160",
+        "ask": "83161"
+      }
+    }
+  ]
+}

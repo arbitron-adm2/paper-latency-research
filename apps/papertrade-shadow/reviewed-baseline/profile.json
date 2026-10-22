@@ -1,0 +1,48 @@
+{
+  "mode": "SANITIZED_FROZEN_BASELINE",
+  "financialMutations": 0,
+  "source": "Source-only export with synthetic configuration",
+  "sourceLock": [
+    {
+      "path": "apps/vchera2/launch-config.json",
+      "sha256": "f181ac6beef0588ad328df638316a3032c0bf84fd2168b2eb97fbe0c1486b0e6"
+    },
+    {
+      "path": "apps/vchera2/scanner/btcy2-lag.js",
+      "sha256": "0cbeb70ef6900647fc4e51e73536e16ca4b6a1e543c6e0972b68ff1ea9f43e08"
+    },
+    {
+      "path": "apps/vchera2/safety.cjs",
+      "sha256": "9535256cb1660cd66997183c659ab482ee166444fa9717e72640a20a865317d2"
+    },
+    {
+      "path": "apps/vchera2/execution-state.cjs",
+      "sha256": "86d67a2d78d232eba298a2faa562429b0a626ed7c8a511e5bb8855042df336db"
+    },
+    {
+      "path": "apps/vchera2/execution-journal.cjs",
+      "sha256": "3e11e7063ce49ca51bd12eb9e3d42c2335f1a4c6fa7929104ecb15f5ce4922cd"
+    },
+    {
+      "path": "apps/vchera2/trading-controls.cjs",
+      "sha256": "99c85d77da8fefda80e4cd682914a0d70325f60009dcedf88c8f61aaab688016"
+    },
+    {
+      "path": "apps/vchera2/paper-quote.cjs",
+      "sha256": "dd74659ed7910c45f852f995ae2fb340d8168b5f0ed007052a0731648579a8ff"
+    },
+    {
+      "path": "apps/vchera2/scanner/regime.js",
+      "sha256": "2d9b2edbb2699afd34683cc6d2b8965897044a5218f8704db19824a70cd884d2"
+    },
+    {
+      "path": "apps/vchera2/scanner/funding-guard.js",
+      "sha256": "dad39db732af356c493a21ca935f064dae522de01e7391477235310d8d843ad4"
+    },
+    {
+      "path": "apps/vchera2/market-data.cjs",
+      "sha256": "cb9c317629524b4931e56f64240ce310df416b22dc6f43f4f59cfa4668162f1c"
+    }
+  ],
+  "nodeEntryActualDeadlineNotModelledAsRealSignature": true
+}

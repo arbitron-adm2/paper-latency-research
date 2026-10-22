@@ -1,0 +1,13 @@
+'use strict';
+const crypto=require('node:crypto');
+const LIMITS={minDev:[.01,500],maxDev:[.05,5000],exitDev:[0,500],spreadMaxHoldSec:[1,3600],bookMaxHoldSec:[1,3600],entryMaxWaitMs:[500,60000],cooldownSec:[0,3600],maxBinRange10s:[0,5000],maxCushionAgainst:[0,500],minBinMove:[0,500],maxEntryCushion:[0,5000],bookMinImb:[0,1],bookFilterImb:[0,1],bookConfirmMs:[0,60000]};
+const FLAGS=['spreadEnabled','bookEnabled','noLongs','g3Enabled','wallGuard'];
+// Known keys keep explicit bounds. Other source keys are accepted as finite numbers/booleans;
+// the SIM model then requires the key to already exist in that bot's source cfg with the same type.
+const GENERIC_KEY=/^[a-z][A-Za-z0-9]{1,40}$/,GENERIC_ABS_MAX=1e7,MAX_KEYS=96;
+// Sizing, LIVE/notifications, learning/ref and data-freshness rails are never strategy parameters.
+const FIXED_KEYS=new Set(['enabled','live','margin','leverage','addMargin','sizeToOi','maxPositions','ptWallet','refWallet','useMainKey','tgEnabled','tgTrades','tgSummaryMin','autoTune','tuneMinSamples','refEnabled','splitParts','splitMinUsd','splitStartUsd','maxDayLossUsd','haircut','volAlerts','volReportMin','maxFeedAgeMs','fillMaxAgeMs','staleMs','marketCloseAfterStaleMs']);
+function parameters(input={}){if(!input||typeof input!=='object'||Array.isArray(input))throw new Error('INVALID_PARAMETERS');const entries=Object.entries(input);if(entries.length>MAX_KEYS)throw new Error('TOO_MANY_PARAMETERS');for(const [k,v]of entries){if(FIXED_KEYS.has(k))throw new Error('PARAMETER_FIXED:'+k);if(FLAGS.includes(k)){if(typeof v!=='boolean')throw new Error('INVALID_PARAMETER:'+k);}else if(LIMITS[k]){const b=LIMITS[k];if(typeof v!=='number'||!Number.isFinite(v)||v<b[0]||v>b[1])throw new Error('INVALID_PARAMETER:'+k);}else{if(!GENERIC_KEY.test(k))throw new Error('INVALID_PARAMETER_KEY:'+k);if(typeof v==='boolean')continue;if(typeof v!=='number'||!Number.isFinite(v)||Math.abs(v)>GENERIC_ABS_MAX)throw new Error('INVALID_PARAMETER:'+k);}}return{...input};}
+function hash(x){return crypto.createHash('sha256').update(JSON.stringify(x,Object.keys(x).sort())).digest('hex');}
+function catalog(){const rows=[];for(const [family,asset]of[['main','BTC'],['native','ETH']])for(const signals of['both','spread','book'])for(const variant of['source','wider-market'])rows.push({id:asset.toLowerCase()+'_'+signals+'_'+variant.replace('-','_'),asset,family,timing:'observe',label:asset+' '+signals+' '+variant,parameters:parameters({spreadEnabled:signals!=='book',bookEnabled:signals!=='spread',...(variant==='wider-market'?{maxBinRange10s:asset==='BTC'?90:2.4,minBinMove:asset==='BTC'?0:.09}: {})})});return rows;}
+module.exports={LIMITS,FLAGS,FIXED_KEYS,parameters,catalog};

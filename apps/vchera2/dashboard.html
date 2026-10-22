@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Paper Research — стратегии</title>
+  <link rel="stylesheet" href="/dashboard.css">
+  <script src="/instrument-dashboard.js" defer></script>
+  <script src="/live-settings.js" defer></script>
+  <script src="/multi-strategy.js" defer></script>
+  <script src="/dashboard.js" defer></script>
+</head>
+<body>
+  <main>
+    <header><div><p class="eyebrow">PAPERTRADE / BTC + ETH</p><h1>Стратегии</h1><p class="sub">BTC + ETH · один поток рынка · отдельная история каждой стратегии</p></div><div class="connection"><span id="connection" class="pill neutral">Подключение</span><span id="rate" class="rate">—</span><button id="start-trading" class="control-start" type="button" disabled>Старт LIVE</button><button id="stop-trading" class="control-stop" type="button" disabled>Стоп</button><button id="pause" type="button" aria-pressed="false">Пауза панели</button></div></header>
+    <p id="control-message" class="control-message" role="status" aria-live="polite">Стоп снимает свои заявки и закрывает позиции; панель продолжает работать.</p>
+    <section id="mode-banner" class="banner"><div><strong id="live-label">Проверка состояния</strong><p id="mode-description">Проверяем runtime. Старые значения не означают готовность к торговле.</p></div><span id="timestamp">Нет снимка</span></section>
+    <section class="panel strategy-workspace" id="shadow-history">
+      <div class="section-title"><div><p class="eyebrow">SHADOW LAB</p><h2>Стратегии на живом рынке</h2><p class="sub">Независимые SIM-счета · общий поток данных</p></div><span id="shadow-history-status" class="pill neutral">Подключение</span></div>
+      <p id="shadow-history-process" class="footnote">Подключаем историю…</p>
+      <div class="strategy-toolbar"><div class="strategy-filters" role="group" aria-label="Фильтр актива"><button type="button" data-shadow-asset="ALL" aria-pressed="true">Все</button><button type="button" data-shadow-asset="BTC" aria-pressed="false">BTC</button><button type="button" data-shadow-asset="ETH" aria-pressed="false">ETH</button></div><label class="strategy-select">История <select id="shadow-model-filter"><option value="ALL">Все стратегии</option></select></label><button type="button" id="shadow-add-toggle" aria-expanded="false">+ Добавить в shadow</button></div>
+      <form id="shadow-add-form" class="strategy-add" hidden>
+        <div class="strategy-form-grid"><label>Шаблон<select id="shadow-template"><option value="btc-main">Основной BTC</option><option value="eth-native">Исходный ETH</option><option value="btc-y2">Вчера 2 · BTC</option></select></label><label>Название<input id="shadow-new-label" required maxlength="64" placeholder="Например, ETH · только спред"></label><label>Сигналы<select id="shadow-signals"><option value="both">Спред + стаканы</option><option value="spread">Только спред</option><option value="book">Только стаканы</option></select></label><label>Оценка очереди<select id="shadow-timing"><option value="observe">Предупреждение</option><option value="strict">Блокировать по ETA</option></select></label></div>
+        <p class="footnote">Правила выбранного шаблона · виртуально 2 300 USDC, маржа 2 100 × 600 · прогрев 3 минуты. Новая стратегия подключается без перезапуска остальных.</p><button type="submit" id="shadow-add-submit">Запустить в shadow</button><p id="shadow-add-message" class="footnote" role="status" aria-live="polite"></p>
+      </form>
+      <div id="shadow-models" class="strategy-grid" aria-label="Стратегии"><p class="muted">Подключаем стратегии…</p></div>
+      <div class="section-title strategy-detail-title"><h3 id="shadow-selected-title">История всех стратегий</h3><span id="shadow-detail-scope" class="footnote">Последние записи</span></div>
+      <div id="shadow-block-summary" class="strategy-blocks"></div>
+      <div class="strategy-tabs" role="group" aria-label="Раздел истории"><button type="button" data-shadow-tab="trades" aria-pressed="true">Сделки</button><button type="button" data-shadow-tab="positions" aria-pressed="false">Позиции и заявки</button><button type="button" data-shadow-tab="decisions" aria-pressed="false">Сигналы и отказы</button><button type="button" data-shadow-tab="probes" aria-pressed="false">После отказа</button></div>
+      <div id="shadow-tab-trades" class="table-scroll"><table><thead><tr><th>Стратегия / актив</th><th>Открытие → закрытие · МСК</th><th>Сторона / вход → выход</th><th>PnL SIM</th><th>Причина выхода</th></tr></thead><tbody id="comparison-trades"></tbody></table></div>
+      <div id="shadow-tab-positions" class="table-scroll" hidden><table><thead><tr><th>Стратегия</th><th>Позиция / заявка</th><th>Состояние / сторона</th><th>Время · МСК</th><th>Вход / причина</th></tr></thead><tbody id="comparison-positions"></tbody></table></div>
+      <div id="shadow-tab-decisions" class="table-scroll" hidden><table><thead><tr><th>Стратегия / время · МСК</th><th>Сигнал</th><th>Проверка стратегии</th><th>Очередь / итог</th><th>Числа</th></tr></thead><tbody id="comparison-decisions"></tbody></table></div>
+      <div id="shadow-tab-probes" class="table-scroll" hidden><p class="footnote">Движение цены по направлению отклонённого сигнала через 1 / 5 / 30 с, bps. Это не PnL: исполнения и расходов в этих замерах нет. UNKNOWN означает пропуск данных.</p><table><thead><tr><th>Стратегия / актив</th><th>Время / сторона</th><th>Причина отказа</th><th>1 / 5 / 30 с · bps</th></tr></thead><tbody id="comparison-probes"></tbody></table></div>
+      <details id="shadow-decision-detail" hidden><summary>Числа и проверки выбранного сигнала</summary><pre id="shadow-decision-json"></pre></details>
+      <p id="shadow-history-warning" class="footnote">PnL — условная симуляция. Задержки ETH ещё не измерены. Капиталы моделей не складываются в один портфель.</p><a href="/api/shadow/history?limit=40">JSON истории</a>
+    </section>
+    <details class="panel"><summary>Качество данных и оценка очереди</summary>
+    <section class="panel research-panel" aria-label="Проверка настоящих данных shadow и guard"><div class="section-title"><h2>Данные рынка</h2><span id="research-source" class="pill neutral">Проверка</span></div><div class="market-accounting"><span id="research-quotes">Quotes: —</span><span id="research-depth">Стаканы: —</span><span id="research-pressure">Pressure: —</span><span id="research-trades">Реальные исполнения: —</span></div><p id="research-note" class="footnote">Живые данные и корректный replay не означают, что неизвестная серверная очередь уже откалибрована.</p></section>
+    <section class="panel"><div class="section-title"><h2>Состояние потока и очереди</h2><span class="pill neutral">Не разрешает LIVE</span></div><div class="columns"><div><h3>Shadow · BTC + ETH SIM</h3><p id="shadow-run-status">Ожидается принятый запуск</p><p id="shadow-run-detail" class="footnote">Симуляция не является фактическим доходом кошелька.</p></div><div><h3>Queue guard · timing only</h3><p id="guard-run-status">Ожидается принятый запуск</p><p id="guard-run-detail" class="footnote">Оценка нагрузки — не персональная очередь и не гарантия выхода.</p></div></div></section>
+    </details>
+    <details class="panel live-settings-panel"><summary><strong>Настройки LIVE</strong><span id="live-draft-revision" class="pill neutral">Черновик · не активирован</span></summary>
+      <p class="sub">Только будущая BTC-торговля. Сохранение не запускает ордера, не активирует расписание и не меняет фактический баланс. ETH — наблюдение.</p>
+      <div class="live-settings-grid">
+        <fieldset><legend>Капитал и размер</legend><div class="actual-funds"><span>На кошельке · только чтение</span><strong id="live-real-funds">—</strong></div><label for="live-budget">Бюджет для бота, USDC</label><input id="live-budget" type="number" min="0" step="0.000001" inputmode="decimal" placeholder="Укажите лимит средств"><label for="live-margin">Маржа одной позиции, USDC</label><input id="live-margin" type="number" min="0" step="0.000001" inputmode="decimal" placeholder="Выберите размер"><label for="live-leverage">Плечо</label><input id="live-leverage" type="number" min="1" max="1000" step="1" inputmode="numeric" placeholder="1…1000"><p id="live-notional-preview" class="footnote">Номинал = маржа × плечо</p><p id="live-capital-note" class="footnote">Бюджет — не пополнение кошелька.</p></fieldset>
+        <fieldset><legend>Окно работы</legend><label class="check"><input id="live-window-requested" type="checkbox">Использовать окно после отдельной активации</label><label for="live-timezone">Часовой пояс</label><input id="live-timezone" list="live-timezones" value="Europe/Moscow"><datalist id="live-timezones"><option value="Europe/Moscow"><option value="UTC"><option value="Europe/Berlin"></datalist><div class="live-inline"><div><label for="live-start">Начало</label><input id="live-start" type="time" value="09:00"></div><div><label for="live-stop">Остановка</label><input id="live-stop" type="time" value="18:00"></div></div><div class="live-weekdays" aria-label="Дни начала окна"><label><input id="live-day-1" type="checkbox">Пн</label><label><input id="live-day-2" type="checkbox">Вт</label><label><input id="live-day-3" type="checkbox">Ср</label><label><input id="live-day-4" type="checkbox">Чт</label><label><input id="live-day-5" type="checkbox">Пт</label><label><input id="live-day-6" type="checkbox">Сб</label><label><input id="live-day-7" type="checkbox">Вс</label></div><div class="live-inline"><div><label for="live-date-from">С даты · необязательно</label><input id="live-date-from" type="date"></div><div><label for="live-date-to">По дату</label><input id="live-date-to" type="date"></div></div><p id="live-schedule-status" class="footnote">Автостарт не активирован.</p><p class="footnote">Автостоп отправляет запрос выхода: очередь может исполнить его позже времени окна.</p></fieldset>
+        <fieldset><legend>Функции LIVE</legend><label class="check"><input id="live-feature-spreadEnabled" type="checkbox">Стратегия «Спред»</label><label class="check"><input id="live-feature-bookEnabled" type="checkbox">Стратегия «Лимитки»</label><label class="check"><input id="live-feature-bookUseHl" type="checkbox">Учитывать стакан Hyperliquid</label><label class="check"><input id="live-feature-bookUseBf" type="checkbox">Учитывать Binance Futures</label><label class="check"><input id="live-feature-bookUseBs" type="checkbox">Учитывать Binance Spot</label><label class="check"><input id="live-feature-bookExitOnFlip" type="checkbox">Выход при развороте стакана</label><label class="check"><input id="live-feature-cushBoth" type="checkbox">Быстрая и медленная подушка</label><label class="check"><input id="live-feature-noLongs" type="checkbox">Только шорты</label><p class="locked-safety">Всегда включены: качество данных, signed deadline, unknown ledger, лимиты риска и независимый выход. Здесь их отключить нельзя.</p></fieldset>
+      </div><div class="live-settings-actions"><button id="save-live-settings" type="button" disabled>Сохранить LIVE черновик</button><button id="reload-live-settings" type="button">Отменить несохранённое</button><span class="sub">Не запускает LIVE</span></div><p id="live-settings-message" class="instrument-message" role="status" aria-live="polite">Загружаем настройки…</p>
+    </details>
+    <section class="panel instrument-controls" aria-label="Выбор инструментов бота">
+      <div><h2>Инструменты бота</h2><p class="sub">A — BTC, B — ETH. Можно выбрать один инструмент или оба. Выбор сохраняется, но не включает LIVE.</p></div>
+      <div class="instrument-actions"><label for="instrument-mode">Режим</label><select id="instrument-mode"><option value="BTC">A · BTC</option><option value="ETH">B · ETH</option><option value="BOTH">A + B · BTC + ETH</option></select><button id="save-instruments" type="button" disabled>Сохранить выбор</button></div>
+      <p id="instrument-message" class="instrument-message" role="status" aria-live="polite">Загружаем текущий выбор. Guard и shadow пока не подключены к исполнению.</p>
+    </section>
+    <section class="market-grid" aria-label="BTC и ETH в реальном времени">
+      <article id="market-BTC" class="panel market-card">
+        <div class="section-title"><div><span class="eyebrow">A / INSTRUMENT 0</span><h2>BTC <small>Bitcoin</small></h2></div><div class="market-badges"><span id="BTC-selected" class="pill neutral">—</span><span id="BTC-fresh" class="pill neutral">Ожидание</span></div></div>
+        <div class="quote-grid"><div><span>Paper · котировка сайта</span><strong id="BTC-paper">—</strong></div><div><span>Hyperliquid · raw</span><strong id="BTC-hl">—</strong></div><div><span>Binance Futures</span><strong id="BTC-bf">—</strong></div><div><span>Binance Spot</span><strong id="BTC-bs">—</strong></div></div>
+        <div class="market-spreads"><span id="BTC-paper-spread">Paper − Futures: —</span><span id="BTC-hl-spread">HL − Futures: —</span></div>
+        <canvas id="BTC-chart" class="market-chart" height="150" aria-label="График BTC: Paper, Hyperliquid, Binance Futures и Spot"></canvas>
+        <div class="legend"><span class="paper">Paper</span><span class="hl">Hyperliquid</span><span class="bf">Futures</span><span class="bs">Spot</span></div>
+        <div class="table-scroll"><table class="market-feeds"><thead><tr><th>Источник</th><th>Bid / Ask</th><th>Возраст</th><th>Стакан / перевес</th></tr></thead><tbody id="BTC-feeds"></tbody></table></div>
+        <p id="BTC-execution" class="execution-note">Исполнение: проверяем статус</p><p id="BTC-parameters" class="footnote">Параметры BTC не используются для ETH.</p>
+        <div class="market-accounting"><span id="BTC-positions">Позиций: —</span><span id="BTC-pnl">PnL бота: —</span><span id="BTC-trades">Закрытий: —</span></div>
+        <details class="market-history"><summary>История BTC · реальные закрытия бота</summary><div class="table-scroll"><table><thead><tr><th>Позиция</th><th>Сторона</th><th>Вход → выход</th><th>Adjusted PnL</th></tr></thead><tbody id="BTC-history"></tbody></table></div></details>
+      </article>
+      <article id="market-ETH" class="panel market-card">
+        <div class="section-title"><div><span class="eyebrow">B / INSTRUMENT 1</span><h2>ETH <small>Ethereum</small></h2></div><div class="market-badges"><span id="ETH-selected" class="pill neutral">—</span><span id="ETH-fresh" class="pill neutral">Ожидание</span></div></div>
+        <div class="quote-grid"><div><span>Paper · котировка сайта</span><strong id="ETH-paper">—</strong></div><div><span>Hyperliquid · raw</span><strong id="ETH-hl">—</strong></div><div><span>Binance Futures</span><strong id="ETH-bf">—</strong></div><div><span>Binance Spot</span><strong id="ETH-bs">—</strong></div></div>
+        <div class="market-spreads"><span id="ETH-paper-spread">Paper − Futures: —</span><span id="ETH-hl-spread">HL − Futures: —</span></div>
+        <canvas id="ETH-chart" class="market-chart" height="150" aria-label="График ETH: Paper, Hyperliquid, Binance Futures и Spot"></canvas>
+        <div class="legend"><span class="paper">Paper</span><span class="hl">Hyperliquid</span><span class="bf">Futures</span><span class="bs">Spot</span></div>
+        <div class="table-scroll"><table class="market-feeds"><thead><tr><th>Источник</th><th>Bid / Ask</th><th>Возраст</th><th>Стакан / перевес</th></tr></thead><tbody id="ETH-feeds"></tbody></table></div>
+        <p id="ETH-execution" class="execution-note">Исполнение: профиль ETH пока не подтверждён</p><p id="ETH-parameters" class="footnote">Стопы и пороги BTC не перенесены на ETH.</p>
+        <div class="market-accounting"><span id="ETH-positions">Позиций: —</span><span id="ETH-pnl">PnL бота: —</span><span id="ETH-trades">Закрытий: —</span></div>
+        <details class="market-history"><summary>История ETH · отдельно от BTC</summary><div class="table-scroll"><table><thead><tr><th>Позиция</th><th>Сторона</th><th>Вход → выход</th><th>Adjusted PnL</th></tr></thead><tbody id="ETH-history"></tbody></table></div></details>
+      </article>
+    </section>
+    <p class="footnote market-disclaimer">Paper — отображаемая котировка сайта, не гарантированная цена исполнения. Спреды считаются только по свежим данным. Два тикера не удваивают общий лимит риска.</p>
+    <section class="metrics" aria-label="Основные показатели">
+      <article class="metric"><h2>Доступная маржа</h2><p id="available">—</p><small id="margin-note">Баланс провайдера</small></article>
+      <article class="metric"><h2>BTC legacy · размер</h2><p id="exposure">—</p><small id="notional">Не применяется к ETH</small></article>
+      <article class="metric" hidden><h2>BTC Hyperliquid</h2><p id="btc">—</p><small id="spread">Спред HL − Binance: —</small></article>
+      <article class="metric" hidden><h2>BTC Paper</h2><p id="paper-price">—</p><small id="paper-spread">Спред Paper − Binance: —</small></article>
+      <article class="metric"><h2>PnL закрытий дня · BTC</h2><p id="day-pnl">—</p><small id="high-water">High-water: —</small></article>
+      <article class="metric"><h2>Позиции / заявки</h2><p id="positions">—</p><small id="positions-note">Бот / весь кошелёк</small></article>
+      <article class="metric"><h2>Состояние потоков</h2><p id="streams">—</p><small id="process">PID: —</small></article>
+    </section>
+    <section class="panel"><div class="section-title"><h2>Позиции и заявки бота</h2><span id="open-count" class="pill neutral">—</span></div><div class="table-scroll"><table><thead><tr><th>Тикер / стратегия</th><th>Сторона</th><th>Состояние</th><th>Вход</th><th>Марк HL</th><th>В плюс, $/монету</th><th>PnL ≈, $</th><th>Держит</th><th>Ликвидация</th></tr></thead><tbody id="open"><tr><td colspan="9">Нет данных</td></tr></tbody></table></div></section>
+    <div class="columns">
+      <section class="panel"><div class="section-title"><h2>Почему нет входов</h2><span id="blocker-count" class="pill neutral">—</span></div><p class="sub">Старт включает LIVE только после проверок. Стоп выключает торговлю, снимает свои заявки и закрывает позиции.</p><ul id="blockers" class="blockers"><li>Ожидается снимок процесса</li></ul></section>
+      <section class="panel"><h2>Кошелёк и авторизация</h2><dl id="wallet-details"></dl><a id="portfolio" href="https://exchange.papertrade.xyz/" target="_blank" rel="noopener noreferrer">Открыть кошелёк в PaperTrade</a><p class="footnote">История кошелька может включать другие запуски; PnL дня — только по сделкам этого бота.</p></section>
+    </div>
+    <section class="panel" hidden><div class="section-title"><h2>BTC legacy · детали потоков</h2><span class="sub" id="chart-note">BTC за 2 мин · Paper: котировка сайта из BBO, не гарантия будущей цены исполнения</span></div><canvas id="chart" class="chart" height="140" aria-label="График BTC mid"></canvas><div class="legend"><span class="paper">Paper</span><span class="hl">Hyperliquid</span><span class="bf">Binance Futures</span><span class="bs">Binance Spot</span></div><div class="table-scroll"><table><thead><tr><th>Площадка</th><th>Bid</th><th>Ask</th><th>BTC mid, USD</th><th>Возраст цены</th><th>Возраст стакана</th><th>Дисбаланс</th></tr></thead><tbody id="feeds"><tr><td colspan="7">Нет данных</td></tr></tbody></table></div></section>
+    <div class="columns">
+      <section class="panel"><h2>Защиты BTC legacy и общие лимиты</h2><dl id="guards"></dl></section>
+      <section class="panel"><h2>Решения и наблюдения</h2><dl id="observations"></dl><h3>Последние решения</h3><ul id="decisions" class="decisions"><li>Нет решений</li></ul></section>
+    </div>
+    <section class="panel"><div class="section-title"><h2>Лента событий</h2><span class="sub"><span id="events-note">Накопление в браузере, новые сверху</span> · <label class="toggle"><input type="checkbox" id="show-skip"> показывать пропуски (skip)</label></span></div><ul id="events" class="events"><li>Нет событий</li></ul></section>
+    <footer>BTC + ETH · shadow на общем потоке · только loopback · <a href="/api/markets">JSON рынков</a> · <a href="/state">Состояние</a> · <a href="/health">Health</a><span id="last-error" role="status" aria-live="polite"></span></footer>
+  </main>
+</body>
+</html>

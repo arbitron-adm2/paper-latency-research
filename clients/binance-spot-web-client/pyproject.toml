@@ -1,0 +1,13 @@
+[project]
+name = "binance-spot-web-client"
+version = "0.1.0"
+description = "Unofficial read-only reconstruction of the binance.com spot trade page client."
+requires-python = ">=3.10"
+dependencies = ["curl_cffi>=0.7", "click>=8"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

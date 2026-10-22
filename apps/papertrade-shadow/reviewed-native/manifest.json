@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "origin": "Sanitized source snapshot",
+  "files": {
+    "btc-lag.js": "1161ccd1f5f1fcd8a7950ca2dbf30421b6a03780af28682131549c187d91d052",
+    "eth-lag.js": "c862ea21be2495587268c0f7c0c9f099f8a550cda76ecf84751c71bc03445bf2",
+    "funding-guard.js": "dad39db732af356c493a21ca935f064dae522de01e7391477235310d8d843ad4",
+    "regime.js": "2d9b2edbb2699afd34683cc6d2b8965897044a5218f8704db19824a70cd884d2"
+  }
+}

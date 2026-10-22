@@ -1,0 +1,114 @@
+{
+  "id": "y2_spread_3_5_v1",
+  "label": "\u0412\u0447\u0435\u0440\u0430 2 \u00b7 \u211631 \u00b7 \u0441\u043f\u0440\u0435\u0434 3\u20135",
+  "shadowModelId": "custom_fe03326e4794736c",
+  "shadowModelHash": "496585bd170b6fe0ecd6b3b97e0dc0deb35e15a9e9c2b8b076b9d51689842709",
+  "parameters": {
+    "baselineSec": 120,
+    "beStartUsd": 0,
+    "bigProfitUsd": 0,
+    "binExitBigUsd": 12,
+    "binExitUsd": 8,
+    "binMoveSec": 10,
+    "binWeight": 1,
+    "bookConfirmMs": 500,
+    "bookEnabled": false,
+    "bookExitOnFlip": true,
+    "bookFilterImb": 0.2,
+    "bookFlipProfitImb": 0.6,
+    "bookHoldImb": 0.3,
+    "bookMaxHoldSec": 3600,
+    "bookMinImb": 0.6,
+    "bookMinSizeUsd": 800000,
+    "bookUseBf": true,
+    "bookUseBs": false,
+    "bookUseHl": true,
+    "cancelIfSignalGone": true,
+    "cancelMissedUsd": 12,
+    "cooldownSec": 0,
+    "cushBoth": true,
+    "cushionExitMs": 1000,
+    "cushionExitUsd": 4,
+    "cushionMaxHoldSec": 3600,
+    "entryDelayMs": 3000,
+    "entryMaxWaitMs": 15000,
+    "evAddUsd": 2,
+    "evMinUsd": 0,
+    "exitDelayMs": 9000,
+    "exitDev": 0,
+    "g3Enabled": true,
+    "g3MaxBinMove": 20,
+    "g3MaxCushion": 12,
+    "g3MinBfBook": 60,
+    "lossWindow": 1,
+    "maxBinRange10s": 40,
+    "maxDev": 5,
+    "maxLossStreak": 0,
+    "maxQueue": 100,
+    "minBinMove": 2,
+    "minDev": 3,
+    "minSamples": 30,
+    "noAddToLoser": true,
+    "noLongs": false,
+    "regHaltHigh": true,
+    "regHighUsd": 129,
+    "regHoldSec": 120,
+    "regHystPct": 10,
+    "regLowUsd": 82,
+    "roundStepUsd": 1000,
+    "roundZoneAboveUsd": 100,
+    "roundZoneUsd": 50,
+    "slowBaselineMin": 30,
+    "spreadEnabled": true,
+    "spreadMaxHoldSec": 3600,
+    "stallSec": 0,
+    "stopUsd": 4,
+    "streakPauseMin": 10,
+    "takeProfitUsd": 0,
+    "trailStartUsd": 1,
+    "trailUsd": 6.5,
+    "vetoAgainstUsd": 10,
+    "wallGuard": true
+  },
+  "sourceManifest": [
+    {
+      "path": "apps/vchera2/scanner/btcy2-lag.js",
+      "sha256": "0cbeb70ef6900647fc4e51e73536e16ca4b6a1e543c6e0972b68ff1ea9f43e08"
+    },
+    {
+      "path": "apps/vchera2/safety.cjs",
+      "sha256": "9535256cb1660cd66997183c659ab482ee166444fa9717e72640a20a865317d2"
+    },
+    {
+      "path": "apps/vchera2/execution-state.cjs",
+      "sha256": "86d67a2d78d232eba298a2faa562429b0a626ed7c8a511e5bb8855042df336db"
+    },
+    {
+      "path": "apps/vchera2/execution-journal.cjs",
+      "sha256": "3e11e7063ce49ca51bd12eb9e3d42c2335f1a4c6fa7929104ecb15f5ce4922cd"
+    },
+    {
+      "path": "apps/vchera2/trading-controls.cjs",
+      "sha256": "99c85d77da8fefda80e4cd682914a0d70325f60009dcedf88c8f61aaab688016"
+    },
+    {
+      "path": "apps/vchera2/paper-quote.cjs",
+      "sha256": "dd74659ed7910c45f852f995ae2fb340d8168b5f0ed007052a0731648579a8ff"
+    },
+    {
+      "path": "apps/vchera2/scanner/regime.js",
+      "sha256": "2d9b2edbb2699afd34683cc6d2b8965897044a5218f8704db19824a70cd884d2"
+    },
+    {
+      "path": "apps/vchera2/scanner/funding-guard.js",
+      "sha256": "dad39db732af356c493a21ca935f064dae522de01e7391477235310d8d843ad4"
+    },
+    {
+      "path": "apps/vchera2/market-data.cjs",
+      "sha256": "cb9c317629524b4931e56f64240ce310df416b22dc6f43f4f59cfa4668162f1c"
+    }
+  ],
+  "entrySignedValidityMs": 20000,
+  "entryMaxWaitMs": 15000,
+  "warmupMs": 180000
+}

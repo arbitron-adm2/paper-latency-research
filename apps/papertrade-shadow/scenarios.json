@@ -1,0 +1,158 @@
+{
+  "version": "shadow-research-1",
+  "seed": 20261020,
+  "fillMaxAgeMs": 1500,
+  "limits": {
+    "minimumMargin": "10",
+    "minimumNotional": "1000",
+    "maximumLeverage": 1000,
+    "source": "public snapshot indexedThroughBlock 49044009",
+    "scope": "present snapshot, NOT proof of historical admission"
+  },
+  "bustBufferRaw": "476041580087574",
+  "experiments": [
+    {
+      "id": "baseline",
+      "margin": 2100,
+      "leverage": 600,
+      "balance": "2300"
+    },
+    {
+      "id": "smaller-notional-same-margin",
+      "margin": 2100,
+      "leverage": 60,
+      "balance": "2300"
+    },
+    {
+      "id": "smaller-margin-and-notional",
+      "margin": 210,
+      "leverage": 600,
+      "balance": "2300"
+    },
+    {
+      "id": "half-notional-same-margin",
+      "margin": 2100,
+      "leverage": 300,
+      "balance": "2300"
+    },
+    {
+      "id": "same-notional-less-collateral",
+      "margin": 1260,
+      "leverage": 1000,
+      "balance": "2300"
+    },
+    {
+      "id": "less-account-money-not-less-risk",
+      "margin": 2100,
+      "leverage": 600,
+      "balance": "1980.693347"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "diagnostic-frictionless",
+      "ideal": true,
+      "positivePayoutBps": 10000,
+      "winFeeBps": 0,
+      "cancelConflictProbability": 0,
+      "fundingBps": 0
+    },
+    {
+      "id": "observed-sized-latency-hypothesis",
+      "entryMs": [
+        2879,
+        3191,
+        3248,
+        3315,
+        3442,
+        3683,
+        3752,
+        3770,
+        3927,
+        4153,
+        4499,
+        4880
+      ],
+      "exitMs": [
+        7172,
+        8331,
+        9515,
+        9851
+      ],
+      "cancelMs": [
+        200,
+        500,
+        1000
+      ],
+      "cancelConflictProbability": 0.75,
+      "congestion": 0.5,
+      "volatility": 0.5,
+      "volumeSlope": 0,
+      "payoutMode": "reconstructed-deadband-haircut",
+      "instrumentRow": [0,"BTC",0,"10",true,false,false,false,false,null,null,null,"15000000000000000000000","814598000000000000000",1000,"10000000000000000000000000","476041580087574","100000000000000000","100000000000000000000000"],
+      "winFeeRaw": "20000000000000000",
+      "winFeeBps": 200,
+      "fundingBps": 0,
+      "label": "Historical reconstructed deadband/haircut with current parameter snapshot, NOT verified cash payout. Latency pools journal-only; conflicts/multipliers are sensitivity hypotheses, NOT calibrated probabilities."
+    },
+    {
+      "id": "adverse-volume-priority-hypothesis",
+      "entryMs": [
+        5000,
+        15000,
+        30000,
+        90000
+      ],
+      "exitMs": [
+        10000,
+        20000,
+        60000,
+        120000
+      ],
+      "cancelMs": [
+        1000,
+        3000,
+        10000
+      ],
+      "cancelConflictProbability": 1,
+      "congestion": 1,
+      "volatility": 1,
+      "volumeSlope": 1,
+      "positivePayoutBps": 0,
+      "winFeeBps": 200,
+      "fundingBps": 5,
+      "lostAck": true,
+      "label": "Unfavourable stress, not a guaranteed bound. Size penalty is hypothetical, not observed volume ranking."
+    },
+    {
+      "id": "unresolved-operations-stress",
+      "entryMs": [
+        3000,
+        15000
+      ],
+      "exitMs": [
+        30000
+      ],
+      "cancelMs": [
+        500
+      ],
+      "cancelConflictProbability": 0,
+      "cancelAckOnly": true,
+      "censored": true,
+      "congestion": 1,
+      "positivePayoutBps": 0,
+      "winFeeBps": 200,
+      "fundingBps": 0,
+      "label": "Unconfirmed cancel and unknown fill outcomes retain collateral and risk slot."
+    }
+  ],
+  "objective_model": {
+    "status": "UNIDENTIFIABLE",
+    "reason": "No server volume algorithm, no independently verified intent labels or price/payout model"
+  },
+  "evaluation": {
+    "calibration": "known events, not a validation split",
+    "validation": "bounded diagnostic market tape only; no independent queue validation",
+    "success_policy": "Always INCONCLUSIVE until evidence supports an identifiable model"
+  }
+}
